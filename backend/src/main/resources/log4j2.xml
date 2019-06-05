@@ -1,0 +1,41 @@
+<Configuration monitorInterval="60">
+    <Properties>
+        <Property name="log-path">logs</Property>
+        <Property name="archive">${log-path}/archive</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console-Appender" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>
+                    %highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [Thread=%t] %c{1} - %msg%n}{STYLE=Logback}
+                </pattern>
+            </PatternLayout>
+        </Console>
+        <RollingFile name="RollingFile-Appender"
+                     fileName="${log-path}/application.log"
+                     filePattern="${archive}/application.log.%d{yyyy-MM-dd}.gz"
+                     bufferedIO="true">
+            <PatternLayout>
+                <pattern>
+                    %d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [Thread=%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${archive}">
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <asyncRoot level="info">
+            <AppenderRef ref="Console-Appender"/>
+            <AppenderRef ref="RollingFile-Appender"/>
+        </asyncRoot>
+    </Loggers>
+</Configuration>

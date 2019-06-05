@@ -1,0 +1,50 @@
+version: '3.6'
+services:
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+        container_name: elasticsearch
+        environment:
+        - cluster.name=observability-cluster
+        - node.name=elastic-n1
+        - "ES_JAVA_OPTS=-Xms750m -Xmx750m"
+        - bootstrap.memory_lock=true
+        - cluster.initial_master_nodes=elastic-n1
+        cap_add:
+        - ALL
+        ulimits:
+            nproc: 65535
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+        - esdata1:/usr/share/elasticsearch/data
+        privileged: true
+        ports:
+        - 9200:9200
+        - 9300:9300
+    kibana:
+        image: docker.elastic.co/kibana/kibana:7.1.1
+        container_name: kibana
+        environment:
+            ELASTICSEARCH_URL: http://elasticsearch:9200/
+            SERVER_NAME: localhost
+        ports:
+        - 5601:5601
+        ulimits:
+            nproc: 65535
+            memlock:
+                soft: -1
+                hard: -1
+        cap_add:
+        - ALL
+    apm-server:
+        image: docker.elastic.co/apm/apm-server:7.1.1
+        container_name: apm-server
+        environment:
+            - apm-server.host=0.0.0.0:8200
+        ports:
+        - 8200:8200
+        cap_add:
+        - ALL
+volumes:
+    esdata1:
