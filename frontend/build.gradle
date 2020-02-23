@@ -17,8 +17,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.swagger:swagger-annotations:1.5.22'
 	compileOnly 'org.projectlombok:lombok:1.18.8'
-	implementation 'co.elastic.apm:apm-agent-api:1.6.1'
-	implementation 'co.elastic.apm:apm-agent-attach:1.6.1'
+	implementation 'co.elastic.apm:apm-agent-api:1.13.0'
+	implementation 'co.elastic.apm:apm-agent-attach:1.13.0'
 
 	annotationProcessor 'org.projectlombok:lombok:1.18.8'
 

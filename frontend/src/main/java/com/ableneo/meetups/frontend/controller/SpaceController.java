@@ -1,7 +1,6 @@
 package com.ableneo.meetups.frontend.controller;
 
 import co.elastic.apm.api.ElasticApm;
-import co.elastic.apm.api.Span;
 import co.elastic.apm.api.Transaction;
 import com.ableneo.meetups.frontend.model.Launch;
 import com.ableneo.meetups.frontend.service.RocketlaunchService;
@@ -11,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+
 
 
 @RestController
@@ -29,9 +29,9 @@ public class SpaceController implements SpaceApi {
     }
 
     @Override
-    public ResponseEntity<Launch> getLaunch(@RequestHeader HttpHeaders headers) {
+    public ResponseEntity<Launch[]> getLaunches(@RequestHeader HttpHeaders headers) {
         addUserInfo(headers);
-        return new ResponseEntity<>(rocketlaunchService.getUpcomingLaunch(), HttpStatus.OK);
+        return new ResponseEntity<>(rocketlaunchService.getLaunches(), HttpStatus.OK);
     }
 
     private void addUserInfo(HttpHeaders headers){

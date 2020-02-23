@@ -1,9 +1,9 @@
-package com.ableneo.workshops.backend.service;
+package com.ableneo.workshops.rocket.launches.service;
 
 import co.elastic.apm.api.CaptureSpan;
-import com.ableneo.workshops.backend.model.Agency;
-import com.ableneo.workshops.backend.model.Launch;
-import com.ableneo.workshops.backend.model.LaunchSite;
+import com.ableneo.workshops.rocket.launches.model.Agency;
+import com.ableneo.workshops.rocket.launches.model.Launch;
+import com.ableneo.workshops.rocket.launches.model.LaunchSite;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -26,7 +28,6 @@ public class RocketlaunchService {
     final RestTemplate restTemplate;
     final ObjectMapper objectMapper;
 
-
     @Value("${rocketlaunch.next.url}")
     private String rocketLaunchNextUrl;
 
@@ -34,7 +35,7 @@ public class RocketlaunchService {
     private String rocketLaunchIdUrl;
 
 
-    public Launch getLaunch(Long id) throws IOException, InterruptedException {
+    public Launch getLaunch(Long id) throws IOException {
         ResponseEntity<String> responseEntity = restTemplate.exchange(rocketLaunchIdUrl+id, HttpMethod.GET, null, String.class);
         JsonNode node = objectMapper.readTree(responseEntity.getBody().getBytes(StandardCharsets.UTF_8));
 
@@ -42,17 +43,28 @@ public class RocketlaunchService {
     }
 
     @CaptureSpan
-    public Launch getUpcomingLaunch() throws IOException, InterruptedException {
+    public Launch[] getLaunches() throws IOException {
         ResponseEntity<String> responseEntity = restTemplate.exchange(rocketLaunchNextUrl+"20", HttpMethod.GET, null, String.class);
         JsonNode node = objectMapper.readTree(responseEntity.getBody().getBytes(StandardCharsets.UTF_8));
-        Random rand = new Random();
 
-        return transformLaunch(node.get("launches").get(rand.nextInt(10)));
+        List<Launch> launchList = new ArrayList<>();
+        for (int i = 0; i < node.get("launches").size(); i++) {
+                launchList.add(transformLaunch(node.get("launches").get(i)));
+        }
+
+        return launchList.toArray(new Launch[]{});
     }
 
     @CaptureSpan
-    private Launch transformLaunch(JsonNode launchNode) throws InterruptedException {
-        Thread.sleep(2000);
+    private Launch transformLaunch(JsonNode launchNode) {
+
+        // I believe we should wait for rest request to complete!
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            log.error("Error during sleep", e);
+        }
+
         Launch launch = new Launch();
         launch.setId(launchNode.get("id").asLong());
         launch.setDate(launchNode.get("windowstart").asText());

@@ -1,4 +1,4 @@
-package com.ableneo.workshops.backend.model;
+package com.ableneo.workshops.rocket.launches.model;
 
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 version: '3.6'
 services:
     elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
         container_name: elasticsearch
         environment:
         - cluster.name=observability-cluster
@@ -23,7 +23,7 @@ services:
         - 9200:9200
         - 9300:9300
     kibana:
-        image: docker.elastic.co/kibana/kibana:7.1.1
+        image: docker.elastic.co/kibana/kibana:7.6.0
         container_name: kibana
         environment:
             ELASTICSEARCH_URL: http://elasticsearch:9200/
@@ -38,7 +38,7 @@ services:
         cap_add:
         - ALL
     apm-server:
-        image: docker.elastic.co/apm/apm-server:7.1.1
+        image: docker.elastic.co/apm/apm-server:7.6.0
         container_name: apm-server
         environment:
             - apm-server.host=0.0.0.0:8200

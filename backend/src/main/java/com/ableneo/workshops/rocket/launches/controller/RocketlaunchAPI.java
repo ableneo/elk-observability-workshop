@@ -1,6 +1,6 @@
-package com.ableneo.workshops.backend.controller;
+package com.ableneo.workshops.rocket.launches.controller;
 
-import com.ableneo.workshops.backend.model.Launch;
+import com.ableneo.workshops.rocket.launches.model.Launch;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Api(tags = "Rocket launch info service")
-@RequestMapping(value = "/rocketlaunch", produces = {"application/json"})
+@RequestMapping(value = "/rocket-launches", produces = {"application/json"})
 public interface RocketlaunchAPI {
 
     @ApiOperation(
@@ -25,7 +25,7 @@ public interface RocketlaunchAPI {
         }
     )
     @RequestMapping(
-        value = "/launch/{id}",
+        value = "/{id}",
         produces = {"application/json"},
         method = RequestMethod.GET
     )
@@ -42,11 +42,11 @@ public interface RocketlaunchAPI {
         }
     )
     @RequestMapping(
-        value = "/launch/",
+        value = "/",
         produces = {"application/json"},
         method = RequestMethod.GET
     )
-    ResponseEntity<Launch> getLaunch();
+    ResponseEntity<Launch[]> getLaunches();
 
 
 

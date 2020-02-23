@@ -27,14 +27,14 @@ public interface SpaceApi {
         }
     )
     @RequestMapping(
-        value = "/launch/{id}",
+        value = "/launches/{id}",
         produces = {"application/json"},
         method = RequestMethod.GET
     ) ResponseEntity<Launch> getLaunch(@PathVariable(value = "id") Long id, @RequestHeader HttpHeaders headers);
 
     @ApiOperation(
-        value = "Get launch",
-        nickname = "getRandomImage",
+        value = "Get launches",
+        nickname = "get list of launches",
         response = Launch.class
     )
     @ApiResponses(
@@ -43,11 +43,11 @@ public interface SpaceApi {
         }
     )
     @RequestMapping(
-        value = "/launch/",
+        value = "/launches/",
         produces = {"application/json"},
         method = RequestMethod.GET
     )
-    ResponseEntity<Launch> getLaunch(@RequestHeader HttpHeaders headers);
+    ResponseEntity<Launch[]> getLaunches(@RequestHeader HttpHeaders headers);
 
 
 

@@ -1,7 +1,7 @@
-package com.ableneo.workshops.backend.controller;
+package com.ableneo.workshops.rocket.launches.controller;
 
-import com.ableneo.workshops.backend.model.Launch;
-import com.ableneo.workshops.backend.service.RocketlaunchService;
+import com.ableneo.workshops.rocket.launches.model.Launch;
+import com.ableneo.workshops.rocket.launches.service.RocketlaunchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +21,15 @@ public class RocketlaunchController implements RocketlaunchAPI {
                 throw new IOException("Bad args!");
             }
             return new ResponseEntity<>(rocketlaunchService.getLaunch(id), HttpStatus.OK);
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @Override public ResponseEntity<Launch> getLaunch() {
+    @Override public ResponseEntity<Launch[]> getLaunches() {
         try {
-            return new ResponseEntity<>(rocketlaunchService.getUpcomingLaunch(), HttpStatus.OK);
-        } catch (IOException | InterruptedException e) {
+            return new ResponseEntity<>(rocketlaunchService.getLaunches(), HttpStatus.OK);
+        } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
