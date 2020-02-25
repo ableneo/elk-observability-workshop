@@ -11,4 +11,6 @@ public class Launch implements Serializable {
     String date;
     LaunchSite launchSite;
     Agency agency;
+    String longCalculationResult;
+    String shortCalculationResult;
 }
