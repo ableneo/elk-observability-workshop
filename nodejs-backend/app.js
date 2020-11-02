@@ -9,8 +9,11 @@ const app = express()
 var sleep = require('thread-sleep');
 
 app.get('/long-running', (req, res) => {
-    console.log("Long running task called")
+    console.log("Long running task called");
+    
+    var span = apm.startSpan("Long calculation");
     sleep(4000);
+    if (span) span.end();
 
     res.json({
         result: "It took long!"

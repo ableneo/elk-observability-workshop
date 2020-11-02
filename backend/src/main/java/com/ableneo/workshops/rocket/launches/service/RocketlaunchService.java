@@ -1,11 +1,12 @@
 package com.ableneo.workshops.rocket.launches.service;
 
-import co.elastic.apm.api.CaptureSpan;
+import co.elastic.apm.opentracing.ElasticApmTracer;
 import com.ableneo.workshops.rocket.launches.model.Agency;
 import com.ableneo.workshops.rocket.launches.model.Launch;
 import com.ableneo.workshops.rocket.launches.model.LaunchSite;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.opentracing.Tracer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @Slf4j
@@ -36,14 +36,21 @@ public class RocketlaunchService {
 
 
     public Launch getLaunch(Long id) throws IOException {
+        Tracer tracer = new ElasticApmTracer();
+        tracer.buildSpan("GetLaunch").start();
+
         ResponseEntity<String> responseEntity = restTemplate.exchange(rocketLaunchIdUrl+id, HttpMethod.GET, null, String.class);
         JsonNode node = objectMapper.readTree(responseEntity.getBody().getBytes(StandardCharsets.UTF_8));
 
+        tracer.activeSpan().finish();
         return transformLaunch(node.get("launches").get(0));
     }
 
-    @CaptureSpan
     public Launch[] getLaunches() throws IOException {
+
+        Tracer tracer = new ElasticApmTracer().
+        tracer.buildSpan("GetLaunches").start();
+
         ResponseEntity<String> responseEntity = restTemplate.exchange(rocketLaunchNextUrl+"20", HttpMethod.GET, null, String.class);
         JsonNode node = objectMapper.readTree(responseEntity.getBody().getBytes(StandardCharsets.UTF_8));
 
@@ -52,10 +59,10 @@ public class RocketlaunchService {
                 launchList.add(transformLaunch(node.get("launches").get(i)));
         }
 
+        tracer.activeSpan().finish();
         return launchList.toArray(new Launch[]{});
     }
 
-    @CaptureSpan
     private Launch transformLaunch(JsonNode launchNode) {
 
         // I believe we should wait for rest request to complete!

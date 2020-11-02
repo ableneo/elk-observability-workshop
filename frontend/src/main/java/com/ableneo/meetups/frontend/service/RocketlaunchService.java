@@ -41,12 +41,6 @@ public class RocketlaunchService {
     @CaptureSpan
     public Launch[] getLaunches() {
         ResponseEntity<Launch[]> responseEntity = restTemplate.exchange(rocketLaunchServiceUrl, HttpMethod.GET, null, Launch[].class);
-        try {
-            // I think we should let our application rest for a while
-            Thread.sleep(4300);
-        } catch (InterruptedException e) {
-            log.error("Some exception during very important sleep phase.");
-        }
         Launch[] launches = responseEntity.getBody();
         Arrays.stream(launches).forEach(this::extendWithLongCalculation);
         Arrays.stream(launches).forEach(this::extendWithShortCalculation);
