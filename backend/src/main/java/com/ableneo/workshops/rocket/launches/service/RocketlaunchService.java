@@ -48,7 +48,7 @@ public class RocketlaunchService {
 
     public Launch[] getLaunches() throws IOException {
 
-        Tracer tracer = new ElasticApmTracer().
+        Tracer tracer = new ElasticApmTracer();
         tracer.buildSpan("GetLaunches").start();
 
         ResponseEntity<String> responseEntity = restTemplate.exchange(rocketLaunchNextUrl+"20", HttpMethod.GET, null, String.class);
